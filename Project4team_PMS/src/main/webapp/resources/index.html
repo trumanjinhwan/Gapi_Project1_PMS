@@ -994,6 +994,22 @@ function outDashboard() {
     });
 }
 
+//대시보드 삭제
+function deleteDashboard() {
+
+    var params = {dashboardId: window.dashboardId};
+    
+    AJAX.call("jsp/deleteDashboard.jsp", params, function (data) {
+        if (data.trim() === "OK") {
+            alert("대시보드가 삭제되었습니다.");
+            getDashboard();
+            $("#dashboardInformationModal").modal("hide"); // 모달 닫기
+        } else {
+            alert("삭제 실패!");
+        }
+    });
+}
+
 
 
 function openEditModal(taskId, taskName, status, Estimated_SP, epic) {

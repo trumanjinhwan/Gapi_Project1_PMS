@@ -133,6 +133,41 @@ public class DashboardDAO {
 			closeResources();
 		}
 	}
+	
+	// 대시보드 삭제하기
+	public boolean deleteDashboard(String dashboardId) {
+		String client_dashboardDeleteQuery = "DELETE FROM CLIENT_DASHBOARD WHERE DASHBOARD_ID = ?";
+		String taskDeleteQuery = "DELETE FROM TASK WHERE DASHBOARD_ID = ?";
+		String dashboardDeleteQuery = "DELETE FROM DASHBOARD WHERE DASHBOARD_ID = ?";
+
+		boolean isDeleted = true;
+		try {
+			connDB();
+			
+			stmt = con.prepareStatement(client_dashboardDeleteQuery);
+			stmt.setString(1, dashboardId);
+			int rowsDeleted = stmt.executeUpdate(); // 삭제된 행 수 반환
+			isDeleted = isDeleted && rowsDeleted > 0; // 성공 시 true, 실패 시 false
+			
+			stmt = con.prepareStatement(taskDeleteQuery);
+			stmt.setString(1, dashboardId);
+			rowsDeleted = stmt.executeUpdate(); // 삭제된 행 수 반환
+			// isDeleted = isDeleted && rowsDeleted > 0; // 성공 시 true, 실패 시 false // task는 없을 수 있으므로 안함
+			
+			stmt = con.prepareStatement(dashboardDeleteQuery);
+			stmt.setString(1, dashboardId);
+			rowsDeleted = stmt.executeUpdate(); // 삭제된 행 수 반환
+			isDeleted = isDeleted && rowsDeleted > 0; // 성공 시 true, 실패 시 false
+			
+			return isDeleted; // 성공 시 true, 실패 시 false
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeResources();
+		}
+	}
 
 	public void connDB() {
 		try {
